@@ -11,8 +11,6 @@ namespace BSP.Dependency.Injection
 
             var c = new CaseRunner();
             c.Run();
-
-            Console.ReadLine();
         }
     }
 }
