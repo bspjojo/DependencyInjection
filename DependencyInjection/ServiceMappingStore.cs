@@ -29,9 +29,14 @@ namespace BSP.Dependency.Injection.DependencyInjection
             AddBinding<TInterface, TImplementation>(InjectionBindingType.Scoped);
         }
 
-        public Type GetImplementationTypeForInterface(Type iType)
+        public Type GetImplementationTypeForBinding(Type iType)
         {
             return _bindings[iType];
+        }
+
+        public InjectionBindingType GetScopeForBinding(Type iType)
+        {
+            return _bindingTypeForTInterface[iType];
         }
 
         private void AddBinding<TInterface, TImplementation>(InjectionBindingType ibt) where TImplementation : TInterface
@@ -43,8 +48,8 @@ namespace BSP.Dependency.Injection.DependencyInjection
 
     public enum InjectionBindingType
     {
-        Singleton,
-        Scoped,
-        Transient
+        Singleton, // only ever one
+        Scoped, // one instance per resolution
+        Transient // new instance each time
     }
 }
