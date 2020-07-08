@@ -1,3 +1,4 @@
+using System;
 using BSP.Dependency.Injection.DependencyInjection;
 using BSP.Dependency.Injection.Cases.Classes;
 
@@ -16,8 +17,13 @@ namespace BSP.Dependency.Injection.Cases
 
             var scope = new Scope(serviceMappingStore);
 
-            var instance = scope.GetInstance<IDepInterface5>();
-            instance.DoThing();
+            var instance1 = scope.GetInstance<IDepInterface5>();
+            instance1.DoThing();
+
+            Console.WriteLine("new scope");
+
+            var instance2 = scope.GetInstance<IDepInterface2>();
+            instance2.DoThing();
         }
     }
 }
