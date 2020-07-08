@@ -7,7 +7,7 @@ namespace BSP.Dependency.Injection.DependencyInjection
     public class Scope
     {
         private readonly ServiceMappingStore _serviceMappingStore;
-        private new Dictionary<Type, object> _singletonInstances;
+        private Dictionary<Type, object> _singletonInstances;
 
         public Scope(ServiceMappingStore serviceMappingStore)
         {
