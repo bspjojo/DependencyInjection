@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BSP.Dependency.Injection.DependencyInjection
 {
@@ -29,6 +30,14 @@ namespace BSP.Dependency.Injection.DependencyInjection
             AddBinding<TInterface, TImplementation>(InjectionBindingType.Scoped);
         }
 
+        public void IntegrityCheck()
+        {
+            foreach (var kvp in _bindings)
+            {
+                CheckIntegrityForRootType(kvp.Value);
+            }
+        }
+
         public Type GetImplementationTypeForBinding(Type iType)
         {
             return _bindings[iType];
@@ -43,6 +52,43 @@ namespace BSP.Dependency.Injection.DependencyInjection
         {
             _bindingTypeForTInterface.Add(typeof(TInterface), ibt);
             _bindings.Add(typeof(TInterface), typeof(TImplementation));
+        }
+
+        private void CheckIntegrityForRootType(Type rootType)
+        {
+            var foundTypes = new Stack<Type>();
+
+            Console.WriteLine($"Checking integrity for: {rootType.Name}");
+
+            CheckIntegrityForType(rootType, foundTypes);
+        }
+
+        private void CheckIntegrityForType(Type typeToCheck, Stack<Type> foundTypes)
+        {
+            if (foundTypes.Contains(typeToCheck))
+            {
+                var tString = string.Join(" -> ", foundTypes.Select(v => v.Name));
+
+                throw new Exception($"Circular reference detected. {typeToCheck.Name} -> {tString}");
+            }
+
+            foundTypes.Push(typeToCheck);
+
+            var constructor = typeToCheck.GetConstructors().Single();
+            var paramInfos = constructor.GetParameters();
+
+            foreach (var p in paramInfos)
+            {
+                var found = _bindings.TryGetValue(p.ParameterType, out var classType);
+                if (!found)
+                {
+                    throw new Exception($"{p.ParameterType.Name} mapping not added.");
+                }
+
+                CheckIntegrityForType(classType, foundTypes);
+            }
+
+            foundTypes.Pop();
         }
     }
 
