@@ -4,6 +4,9 @@
 			"path": "./BSP.Dependency.Injection"
 		},
 		{
+			"path": "./BSP.Dependency.Injection.Test"
+		},
+		{
 			"path": "./BSP.Example"
 		}
 	],
